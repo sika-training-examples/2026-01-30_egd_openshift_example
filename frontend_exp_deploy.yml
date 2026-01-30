@@ -16,12 +16,21 @@ spec:
       labels:
         app: frontend-exp
     spec:
+      initContainers:
+        - name: wait-for-backend
+          image: sikalabs/slu:v0.96.0
+          args:
+            - /bin/sh
+            - -c
+            - slu wait-for http200 --url http://backend
       containers:
         - name: frontend-exp
           image: ghcr.io/ondrejsika/counter-frontend-go
           env:
             - name: API_ORIGIN
               value: http://backend
+            - name: FAIL_ON_ERROR
+              value: '1'
           ports:
             - name: http
               containerPort: 3000

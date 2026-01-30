@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrations
+spec:
+  template:
+    metadata:
+      labels:
+        job: migrations
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrations
+          image: redis:8
+          command: ["redis-cli", "-h", "redis", "incrby", "counter", "10000"]
